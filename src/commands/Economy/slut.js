@@ -103,8 +103,8 @@ function resolveOutcome(activity, wallet) {
 
 export default {
     data: new SlashCommandBuilder()
-        .setName('slut')
-        .setDescription('Take a risky provocative job for random payout or loss'),
+        .setName('odd jobs')
+        .setDescription('Take a risky job for random payout or loss'),
 
     execute: withErrorHandling(async (interaction, config, client) => {
         const deferred = await InteractionHelper.safeDefer(interaction);
@@ -114,7 +114,7 @@ export default {
             const guildId = interaction.guildId;
             const now = Date.now();
 
-            logger.debug(`[ECONOMY] Slut command started for ${userId}`, { userId, guildId });
+            logger.debug(`[ECONOMY] odd jobs command started for ${userId}`, { userId, guildId });
 
             const userData = await getEconomyData(client, guildId, userId);
 
@@ -132,7 +132,7 @@ export default {
             if (now - lastSlut < SLUT_COOLDOWN) {
                 const remainingTime = lastSlut + SLUT_COOLDOWN - now;
                 throw createError(
-                    "Slut cooldown active",
+                    "Odd jobs cooldown active",
                     ErrorTypes.RATE_LIMIT,
                     `You need to wait before you can work again! Try again in **${Math.ceil(remainingTime / 60000)}** minutes.`,
                     { timeRemaining: remainingTime, cooldownType: 'slut' }
@@ -184,5 +184,5 @@ export default {
             });
 
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
-    }, { command: 'slut' })
+    }, { command: 'odd jobs' })
 };
