@@ -103,7 +103,7 @@ function resolveOutcome(activity, wallet) {
 
 export default {
     data: new SlashCommandBuilder()
-        .setName('odd jobs')
+        .setName('tricks')
         .setDescription('Take a risky job for random payout or loss'),
 
     execute: withErrorHandling(async (interaction, config, client) => {
@@ -114,7 +114,7 @@ export default {
             const guildId = interaction.guildId;
             const now = Date.now();
 
-            logger.debug(`[ECONOMY] odd jobs command started for ${userId}`, { userId, guildId });
+            logger.debug(`[ECONOMY] tricks command started for ${userId}`, { userId, guildId });
 
             const userData = await getEconomyData(client, guildId, userId);
 
@@ -132,10 +132,10 @@ export default {
             if (now - lastSlut < SLUT_COOLDOWN) {
                 const remainingTime = lastSlut + SLUT_COOLDOWN - now;
                 throw createError(
-                    "Odd jobs cooldown active",
+                    "tricks cooldown active",
                     ErrorTypes.RATE_LIMIT,
                     `You need to wait before you can work again! Try again in **${Math.ceil(remainingTime / 60000)}** minutes.`,
-                    { timeRemaining: remainingTime, cooldownType: 'slut' }
+                    { timeRemaining: remainingTime, cooldownType: 'tricks' }
                 );
             }
 
@@ -156,7 +156,7 @@ export default {
 
             await setEconomyData(client, guildId, userId, userData);
 
-            logger.info(`[ECONOMY_TRANSACTION] Slut activity resolved`, {
+            logger.info(`[ECONOMY_TRANSACTION] Tricks activity resolved`, {
                 userId,
                 guildId,
                 activity: activity.name,
@@ -184,5 +184,5 @@ export default {
             });
 
             await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
-    }, { command: 'odd jobs' })
+    }, { command: 'tricks' })
 };
