@@ -5,9 +5,9 @@ import { withErrorHandling, createError, ErrorTypes } from '../../utils/errorHan
 import { logger } from '../../utils/logger.js';
 import { InteractionHelper } from '../../utils/interactionHelper.js';
 
-const SLUT_COOLDOWN = 45 * 60 * 1000;
+const TRICKS_COOLDOWN = 45 * 60 * 1000;
 
-const SLUT_ACTIVITIES = [
+const TRICKS_ACTIVITIES = [
     { name: "Cam Stream", min: 120, max: 450, risk: 0.2 },
     { name: "Private Dance Session", min: 220, max: 700, risk: 0.25 },
     { name: "After-Hours Club Host", min: 320, max: 900, risk: 0.3 },
@@ -120,17 +120,17 @@ export default {
 
             if (!userData) {
                 throw createError(
-                    "Failed to load economy data for slut command",
+                    "Failed to load economy data for tricks command",
                     ErrorTypes.DATABASE,
                     "Failed to load your economy data. Please try again later.",
                     { userId, guildId }
                 );
             }
 
-            const lastSlut = userData.lastSlut || 0;
+            const lastTricks = userData.lastTricks || 0;
 
-            if (now - lastSlut < SLUT_COOLDOWN) {
-                const remainingTime = lastSlut + SLUT_COOLDOWN - now;
+            if (now - lastTricks < TRICKS_COOLDOWN) {
+                const remainingTime = lastSlut + TRICKS_COOLDOWN - now;
                 throw createError(
                     "tricks cooldown active",
                     ErrorTypes.RATE_LIMIT,
@@ -139,17 +139,17 @@ export default {
                 );
             }
 
-            const activity = randomChoice(SLUT_ACTIVITIES);
+            const activity = randomChoice(TRICKS_ACTIVITIES);
 
             const outcome = resolveOutcome(activity, userData.wallet || 0);
 
-            userData.lastSlut = now;
-            userData.totalSluts = (userData.totalSluts || 0) + 1;
-            userData.totalSlutEarnings = (userData.totalSlutEarnings || 0) + Math.max(0, outcome.delta);
-            userData.totalSlutLosses = (userData.totalSlutLosses || 0) + Math.max(0, -outcome.delta);
+            userData.lastTricks = now;
+            userData.totalTricks = (userData.totalTricks || 0) + 1;
+            userData.totalTricksEarnings = (userData.totalTricksEarnings || 0) + Math.max(0, outcome.delta);
+            userData.totalTricksLosses = (userData.totalTricksLosses || 0) + Math.max(0, -outcome.delta);
 
             if (outcome.type !== 'payout') {
-                userData.failedSluts = (userData.failedSluts || 0) + 1;
+                userData.failedTricks = (userData.failedTricks || 0) + 1;
             }
 
             userData.wallet = Math.max(0, (userData.wallet || 0) + outcome.delta);
@@ -171,9 +171,9 @@ export default {
                 `${outcome.message}`,
                 `💸 **Net Result:** ${amountLabel}`,
                 `💳 **Current Balance:** $${userData.wallet.toLocaleString()}`,
-                `📊 **Total Sessions:** ${userData.totalSluts}`,
-                `💵 **Total Earned:** $${(userData.totalSlutEarnings || 0).toLocaleString()}`,
-                `🧾 **Total Lost:** $${(userData.totalSlutLosses || 0).toLocaleString()}`
+                `📊 **Total Sessions:** ${userData.totalTricks}`,
+                `💵 **Total Earned:** $${(userData.totalTricksEarnings || 0).toLocaleString()}`,
+                `🧾 **Total Lost:** $${(userData.totalTricksLosses || 0).toLocaleString()}`
             ];
 
             const embed = createEmbed({
