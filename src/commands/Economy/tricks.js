@@ -130,7 +130,7 @@ export default {
             const lastTricks = userData.lastTricks || 0;
 
             if (now - lastTricks < TRICKS_COOLDOWN) {
-                const remainingTime = lastSlut + TRICKS_COOLDOWN - now;
+                const remainingTime = lastTricks + TRICKS_COOLDOWN - now;
                 throw createError(
                     "tricks cooldown active",
                     ErrorTypes.RATE_LIMIT,
